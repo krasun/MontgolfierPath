@@ -14,21 +14,6 @@
 
         setInterval(function() {
             var step = game.getStep();
-            // if (step % 10 == 0) {
-            //     game.turnGasJetOn();
-            // }
-            // if (step % 10 == 5) {
-            //     game.turnGasJetOff();
-            // }
-
-            // if (step % 20 == 0) {
-            //     game.closeHole();
-            // }
-
-            // if (step % 20 == 10) {
-            //     game.openHole();
-            // }
-
             var log = game.getLog();
             $('#log').html(log.join('<br/>'));
             game.lifeCycleStep();
@@ -36,17 +21,17 @@
         $(document).keydown(function(e) {
             switch (e.keyCode) {
                 case 38:
-                    game.turnGasJetOn();
+                    game.hotAirBalloon.gasJet.turnOn();
                     break;
                 case 40:
-                    game.toggleHole();
+                    game.hotAirBalloon.balloon.hole.toggle();
                     break;
             }
         });
         $(document).keyup(function(e) {
             switch (e.keyCode) {
                 case 38:
-                    game.turnGasJetOff();
+                    game.hotAirBalloon.gasJet.turnOff();
                     break;
             }
         });

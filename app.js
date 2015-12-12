@@ -1,5 +1,5 @@
 var TEMPERATURE_COEF_NEAR_FLAME = 0.001;
-var TEMPERATURE_COEF_OPEN_AIR = 0.1;
+var TEMPERATURE_COEF_OPEN_AIR = 0.04;
 var TEMPERATURE_COEF_CLOSED_BALLOON = 0.01;
 var SPEED_COEF = 1;
 var WIND_COEF = 0.01 * SPEED_COEF;
@@ -106,21 +106,30 @@ var AirSpace = function(position, wind, size, temperature) {
     this.temperature = temperature;
 }
 
+// todo: add square
+var BalloonHole = function() {
+    var opened = false;
+
+    this.isOpened = function() {
+        return opened;
+    }
+    this.open = function() {
+        opened = true;
+    }
+    this.close = function() {
+        opened = false;
+    }
+    this.toggle = function() {
+        opened = ! opened;
+    }
+}
+
 var Balloon = function(volume, size, temperature) {
     this.volume = volume;
     this.size = size;
     this.temperature = temperature;
-    this.holeState = 0;
-
-    this.openHole = function() {
-        this.holeState = 1;
-    }
-    this.closeHole = function() {
-        this.holeState = 0;
-    }
-    this.isHoleOpened = function () {
-        return this.holeState === 1;
-    }
+    this.hole = new BalloonHole();
+    this.radius = size.width; // KOSTIL for view
 }
 
 var HotAirBalloon = function(position, balloon, basket, gasJet, speed) {
@@ -146,7 +155,7 @@ HotAirBalloon.prototype.applyGroundForce = function(speed) {
     resultSpeed.y -= Gv;
     return resultSpeed;
 }
-HotAirBalloon.prototype.move = function(vektor, bounds) {
+HotAirBalloon.prototype.move = function(vektor) {
 
     // apply speed
     this.position.y += (vektor.y - G) * SPEED_COEF; // popravka na G
@@ -154,6 +163,11 @@ HotAirBalloon.prototype.move = function(vektor, bounds) {
     if (this.position.y > 0) {
         this.position.x += vektor.x * SPEED_COEF;
     }
+
+}
+
+HotAirBalloon.prototype.checkColisions = function(bounds) {
+
     // check collision
     if (this.position.y <= 0) {
         this.position.y = 0;
@@ -168,7 +182,6 @@ HotAirBalloon.prototype.move = function(vektor, bounds) {
     if (this.position.x >= bounds.width) {
         this.position.x = bounds.width;
     }
-
 }
 
 var Map = function(size) {
@@ -233,9 +246,7 @@ var Game = function(width, height) {
         return step;
     }
 
-    this.getHotAirBalloon = function() {
-        return hotAirBalloon;
-    }
+    this.hotAirBalloon = hotAirBalloon;
 
     this.getLog = function() {
         var str = ['Step: ' + step];
@@ -250,7 +261,7 @@ var Game = function(width, height) {
             str.push('GasJet is OFF');
         }
 
-        if (hotAirBalloon.balloon.isHoleOpened()) {
+        if (hotAirBalloon.balloon.hole.isOpened()) {
             str.push('Hole in balloon is OPEN');
         } else {
             str.push('Hole in balloon is CLOSE');
@@ -259,36 +270,12 @@ var Game = function(width, height) {
         return str;
     }
 
-    this.openHole = function() {
-        hotAirBalloon.balloon.openHole();
-    }
-
-    this.closeHole = function() {
-        hotAirBalloon.balloon.closeHole();
-    }
-
-    this.toggleHole = function() {
-        if (hotAirBalloon.balloon.isHoleOpened()) {
-            hotAirBalloon.balloon.closeHole();
-        } else {
-            hotAirBalloon.balloon.openHole();
-        }
-    }
-
-    this.turnGasJetOn = function() {
-        hotAirBalloon.gasJet.turnOn();
-    }
-
-    this.turnGasJetOff = function() {
-        hotAirBalloon.gasJet.turnOff();
-    }
-
     this.lifeCycleStep = function() {
         var vektor = new Vektor(0, 0);
         var airSpace = map.findAirSpace(hotAirBalloon.position);
         // recalc balloon temperature
         // open air
-        if (hotAirBalloon.balloon.isHoleOpened()) {
+        if (hotAirBalloon.balloon.hole.isOpened()) {
             hotAirBalloon.balloon.temperature.addTemperature(airSpace.temperature, TEMPERATURE_COEF_OPEN_AIR);
         } else {
             hotAirBalloon.balloon.temperature.addTemperature(airSpace.temperature, TEMPERATURE_COEF_CLOSED_BALLOON);
@@ -307,7 +294,8 @@ var Game = function(width, height) {
         vektor = hotAirBalloon.applyTemperature(vektor, airSpace.temperature);
         this.speed = vektor;
 
-        hotAirBalloon.move(vektor, map.size);
+        hotAirBalloon.move(vektor);
+        hotAirBalloon.checkColisions(map.size);
         step++;
     }
 };

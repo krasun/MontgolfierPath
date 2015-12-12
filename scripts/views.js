@@ -1,9 +1,12 @@
-var BalloonView = {
-    balloon: Montgolfiera.balloon,
+function preparePoint(point, context) {
+    return new Point(point.x, context.canvas.height - point.y);
+}
 
-    render: function (context) {
+var BalloonView = function(montgolfiera) {
+    this.render = function (context) {
+        var point = preparePoint(montgolfiera.position, context);
         context.beginPath();
-        context.arc(BalloonView.balloon.centerPosition.x, BalloonView.balloon.centerPosition.y, BalloonView.balloon.radius, 0, 2 * Math.PI, false);
+        context.arc(point.x, point.y, montgolfiera.balloon.radius, 0, 2 * Math.PI, false);
         context.fillStyle = '#9B0177';
         context.fill();
         context.lineWidth = 1;
@@ -12,16 +15,16 @@ var BalloonView = {
     }
 };
 
-var GondolaView = {
-    balloon: Montgolfiera.balloon,
-
-    render: function (context) {
+var GondolaView = function(montgolfiera) {
+    this.render = function (context) {
+        var point = preparePoint(montgolfiera.position, context);
         var
-            balloonDistance = GondolaView.balloon.radius * 0.25, // 25% of balloon radius
-            gondolaHeight = GondolaView.balloon.radius * 0.25,
-            gondolaWidth = GondolaView.balloon.radius * 0.5,
-            gondolaPositionX = GondolaView.balloon.centerPosition.x - gondolaWidth / 2,
-            gondolaPositionY = balloonDistance + GondolaView.balloon.radius + GondolaView.balloon.centerPosition.y
+            balloon = montgolfiera.balloon,
+            balloonDistance = balloon.radius * 0.25, // 25% of balloon radius
+            gondolaHeight = balloon.radius * 0.25,
+            gondolaWidth = balloon.radius * 0.5,
+            gondolaPositionX = point.x - gondolaWidth / 2,
+            gondolaPositionY = balloonDistance + balloon.radius + point.y
         ;
 
         context.beginPath();
@@ -34,16 +37,17 @@ var GondolaView = {
     }
 };
 
-var GasJetView = {
-    balloon: Montgolfiera.balloon,
-
-    render: function (context) {
+var GasJetView = function (montgolfiera) {
+    this.render = function (context) {
+        var point = preparePoint(montgolfiera.position, context);
         var
-            balloonDistance = GasJetView.balloon.radius * 0.25, // 25% of balloon radius
-            gondolaHeight = GasJetView.balloon.radius * 0.25,
-            gondolaWidth = GasJetView.balloon.radius * 0.5,
-            gondolaPositionX = GasJetView.balloon.centerPosition.x - gondolaWidth / 2,
-            gondolaPositionY = balloonDistance + GasJetView.balloon.radius + GasJetView.balloon.centerPosition.y
+            balloon = montgolfiera.balloon,
+            gasJet = montgolfiera.gasJet,
+            balloonDistance = balloon.radius * 0.25, // 25% of balloon radius
+            gondolaHeight = balloon.radius * 0.25,
+            gondolaWidth = balloon.radius * 0.5,
+            gondolaPositionX = point.x - gondolaWidth / 2,
+            gondolaPositionY = balloonDistance + balloon.radius + point.y
         ;
 
         var gasJetWidth = 0.25 * gondolaWidth,
@@ -54,7 +58,7 @@ var GasJetView = {
 
         context.beginPath();
         context.rect(gasJetPositionX, gasJetPositionY, gasJetWidth, gasJetHeight);
-        context.fillStyle = Montgolfiera.gasJet.isTurnedOn ? 'yellow' : 'gray';
+        context.fillStyle = gasJet.isTurnedOn() ? 'yellow' : 'gray';
         context.fill();
         context.lineWidth = 1;
         context.strokeStyle = 'gray';
@@ -62,17 +66,18 @@ var GasJetView = {
     }
 };
 
-var BalloonHoleView = {
-    balloon: Montgolfiera.balloon,
-
-    render: function (context) {
+var BalloonHoleView = function(montgolfiera) {
+    this.render = function (context) {
+        var point = preparePoint(montgolfiera.position, context);
         var
-            balloonHoleRadius = BalloonHoleView.balloon.radius * 0.1,
-            balloonHoleCenterPositionX = BalloonHoleView.balloon.centerPosition.x,
-            balloonHoleCenterPositionY = BalloonHoleView.balloon.centerPosition.y - BalloonHoleView.balloon.radius
+            balloon = montgolfiera.balloon,
+            balloonHole = balloon.hole,
+            balloonHoleRadius = balloon.radius * 0.1,
+            balloonHoleCenterPositionX = point.x,
+            balloonHoleCenterPositionY = point.y - balloon.radius
         ;
 
-        if (Montgolfiera.balloonHole.isOpened) {
+        if (balloonHole.isOpened) {
             context.beginPath();
             context.arc(balloonHoleCenterPositionX, balloonHoleCenterPositionY, balloonHoleRadius, 0, Math.PI, false);
             context.fillStyle = '#B359A8';
@@ -81,12 +86,16 @@ var BalloonHoleView = {
     }
 };
 
-var MontgolfieraView = {
-    render: function (context) {
-        BalloonView.render(context);
-        GondolaView.render(context);
-        GasJetView.render(context);
-        BalloonHoleView.render(context);
+var MontgolfieraView = function(montgolfiera) {
+    this.balloonView = new BalloonView(montgolfiera);
+    this.balloonHoleView = new BalloonHoleView(montgolfiera);
+    this.gondolaView = new GondolaView(montgolfiera);
+    this.gasJetView = new GasJetView(montgolfiera);
+    this.render = function (context) {
+        this.balloonView.render(context);
+        this.gondolaView.render(context);
+        this.gasJetView.render(context);
+        this.balloonHoleView.render(context);
     }
 };
 

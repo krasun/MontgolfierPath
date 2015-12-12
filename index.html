@@ -22,22 +22,16 @@
                 canvas = document.getElementById('canvas'),
                 context = canvas.getContext('2d')
                 game = new Game(canvas.width, canvas.height)
+                view = new MontgolfieraView(game.hotAirBalloon)
             ;
 
-            Montgolfiera.balloon.centerPosition.x = canvas.width / 2;
-            Montgolfiera.balloon.centerPosition.y = canvas.height / 2;
-            ViewRegistry.registerView(MontgolfieraView);
+            ViewRegistry.registerView(view);
 
             function updateGameState() {
-                if (Montgolfiera.gasJet.isTurnedOn) {
-                    game.turnGasJetOn();
-                } else {
-                    game.turnGasJetOff();
-                }
                 // console.log(game.getHotAirBalloon().position.y);
                 game.lifeCycleStep();
-                Montgolfiera.balloon.centerPosition.x = game.getHotAirBalloon().position.x;
-                Montgolfiera.balloon.centerPosition.y = canvas.height - game.getHotAirBalloon().position.y;
+                // Montgolfiera.balloon.centerPosition.x = game.getHotAirBalloon().position.x;
+                // Montgolfiera.balloon.centerPosition.y = canvas.height - game.getHotAirBalloon().position.y;
             }
 
             (function gameLoop() {

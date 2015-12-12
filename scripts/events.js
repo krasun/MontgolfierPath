@@ -2,13 +2,13 @@ document.addEventListener('keyup', function (event) {
     switch (event.keyCode) {
         // up
         case 38:
-            BalloonHole.close();
+            game.hotAirBalloon.balloon.hole.close();
 
             event.preventDefault();
             break;
         // down
         case 40:
-            MontgolfieraGasJet.turnOff();
+            game.hotAirBalloon.gasJet.turnOff();
 
             event.preventDefault();
             break;
@@ -19,13 +19,13 @@ document.addEventListener('keydown', function (event) {
     switch (event.keyCode) {
         // up
         case 38:
-            BalloonHole.open();
+            game.hotAirBalloon.balloon.hole.open();
 
             event.preventDefault();
             break;
         // down
         case 40:
-            MontgolfieraGasJet.turnOn();
+            game.hotAirBalloon.gasJet.turnOn();
 
             event.preventDefault();
             break;
