@@ -15,11 +15,13 @@
         <script src="./scripts/models.js"></script>
         <script src="./scripts/views.js"></script>
         <script src="./scripts/events.js"></script>
+        <script src="./app.js"></script>
 
         <script>
             var
                 canvas = document.getElementById('canvas'),
                 context = canvas.getContext('2d')
+                game = new Game(canvas.width, canvas.height)
             ;
 
             Montgolfiera.balloon.centerPosition.x = canvas.width / 2;
@@ -27,8 +29,15 @@
             ViewRegistry.registerView(MontgolfieraView);
 
             function updateGameState() {
-                Montgolfiera.balloon.centerPosition.x += getRandomInt(-5, 5);
-                Montgolfiera.balloon.centerPosition.y += getRandomInt(-5, 5);
+                if (Montgolfiera.gasJet.isTurnedOn) {
+                    game.turnGasJetOn();
+                } else {
+                    game.turnGasJetOff();
+                }
+                // console.log(game.getHotAirBalloon().position.y);
+                game.lifeCycleStep();
+                Montgolfiera.balloon.centerPosition.x = game.getHotAirBalloon().position.x;
+                Montgolfiera.balloon.centerPosition.y = canvas.height - game.getHotAirBalloon().position.y;
             }
 
             (function gameLoop() {

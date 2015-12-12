@@ -1,10 +1,10 @@
 var TEMPERATURE_COEF_NEAR_FLAME = 0.001;
 var TEMPERATURE_COEF_OPEN_AIR = 0.1;
 var TEMPERATURE_COEF_CLOSED_BALLOON = 0.01;
-var WIND_COEF = 0.01;
-var SPEED_COEF = 0.001;
-var TEMPERATURE_TO_SPEED_COEF = 0.2;
-var G = 7.9;
+var SPEED_COEF = 1;
+var WIND_COEF = 0.01 * SPEED_COEF;
+var TEMPERATURE_TO_SPEED_COEF = 0.02 * SPEED_COEF;
+var G = 0.79;
 
 function roundFloat(float) {
     return Math.round(float * 100) / 100;
@@ -130,14 +130,45 @@ var HotAirBalloon = function(position, balloon, basket, gasJet, speed) {
     this.gasJet = gasJet;
     this.speed = speed;
 }
-HotAirBalloon.prototype.applyWind = function(wind) {
-    var sub = Vektor.sub(wind, this.speed);
+HotAirBalloon.prototype.applyWind = function(speed, wind) {
+    var sub = Vektor.sub(wind, speed);
     sub.mulScalar(WIND_COEF);
-    this.speed = Vektor.sum(this.speed, sub);
+    return Vektor.sum(speed, sub);
 }
-HotAirBalloon.prototype.applyTemperature = function(temperature) {
+HotAirBalloon.prototype.applyTemperature = function(speed, temperature) {
+    var resultSpeed = new Vektor(speed.x, speed.y);
     var temperatureDelta = this.balloon.temperature.value - temperature.value;
-    this.speed.y += temperatureDelta * TEMPERATURE_TO_SPEED_COEF - G;
+    resultSpeed.y += temperatureDelta * TEMPERATURE_TO_SPEED_COEF;
+    return resultSpeed;
+}
+HotAirBalloon.prototype.applyGroundForce = function(speed) {
+    var resultSpeed = new Vektor(speed.x, speed.y);
+    resultSpeed.y -= Gv;
+    return resultSpeed;
+}
+HotAirBalloon.prototype.move = function(vektor, bounds) {
+
+    // apply speed
+    this.position.y += (vektor.y - G) * SPEED_COEF; // popravka na G
+    // lets fly only if we're not on ground
+    if (this.position.y > 0) {
+        this.position.x += vektor.x * SPEED_COEF;
+    }
+    // check collision
+    if (this.position.y <= 0) {
+        this.position.y = 0;
+    }
+    if (this.position.y >= bounds.height) {
+        this.position.y = bounds.height;
+    }
+
+    if (this.position.x <= 0) {
+        this.position.x = 0;
+    }
+    if (this.position.x >= bounds.width) {
+        this.position.x = bounds.width;
+    }
+
 }
 
 var Map = function(size) {
@@ -186,20 +217,24 @@ Map.prototype.findAirSpace = function(point) {
     throw new Error('Point ' + point.toString() + ' is out of map range');
 }
 
-var game = new (function() {
+var Game = function(width, height) {
     var hotAirBalloon = new HotAirBalloon(
-        new Point(0, 0),
+        new Point(height / 2, 0),
         new Balloon(3000, new Size(10, 15), new Temperature(60)),
         new Basket(100),
         new GasJet(new Temperature(700), 0, 100, 100),
         new Vektor(0, 0)
     );
-    var map = new Map(new Size(1000, 1000));
+    var map = new Map(new Size(width, height));
     map.shuffleAirSpaces();
     var step = 0;
 
     this.getStep = function() {
         return step;
+    }
+
+    this.getHotAirBalloon = function() {
+        return hotAirBalloon;
     }
 
     this.getLog = function() {
@@ -249,54 +284,33 @@ var game = new (function() {
     }
 
     this.lifeCycleStep = function() {
+        var vektor = new Vektor(0, 0);
         var airSpace = map.findAirSpace(hotAirBalloon.position);
         // recalc balloon temperature
-        // Gas jer
-        if (hotAirBalloon.gasJet.isTurnedOn()) {
-            hotAirBalloon.balloon.temperature.addTemperature(hotAirBalloon.gasJet.temperature, TEMPERATURE_COEF_NEAR_FLAME);
-        }
         // open air
         if (hotAirBalloon.balloon.isHoleOpened()) {
             hotAirBalloon.balloon.temperature.addTemperature(airSpace.temperature, TEMPERATURE_COEF_OPEN_AIR);
         } else {
             hotAirBalloon.balloon.temperature.addTemperature(airSpace.temperature, TEMPERATURE_COEF_CLOSED_BALLOON);
         }
+        // Gas jet
+        if (hotAirBalloon.gasJet.isTurnedOn()) {
+            hotAirBalloon.balloon.temperature.addTemperature(hotAirBalloon.gasJet.temperature, TEMPERATURE_COEF_NEAR_FLAME);
+        }
+
         // recalc balloon moving vektor only if we're in air
         if (hotAirBalloon.position.y > 0) {
-            hotAirBalloon.applyWind(airSpace.wind);
+            vektor = hotAirBalloon.applyWind(vektor, airSpace.wind);
         }
 
         // recalc balloon speed according to balloon temperature
-        hotAirBalloon.applyTemperature(airSpace.temperature);
+        vektor = hotAirBalloon.applyTemperature(vektor, airSpace.temperature);
+        this.speed = vektor;
 
-        // check collision
-        if (hotAirBalloon.position.y + hotAirBalloon.speed.y <= 0 && hotAirBalloon.speed.y < 0) {
-            hotAirBalloon.speed.y = 0;
-            hotAirBalloon.position.y = 0;
-        }
-        if (hotAirBalloon.position.y + hotAirBalloon.speed.y >= map.size.height && hotAirBalloon.speed.y > 0) {
-            hotAirBalloon.speed.y = 0;
-            hotAirBalloon.position.y = map.size.height;
-        }
-
-        if (hotAirBalloon.position.x + hotAirBalloon.speed.x <= 0 && hotAirBalloon.speed.x < 0) {
-            hotAirBalloon.speed.x = 0;
-            hotAirBalloon.position.x = 0;
-        }
-        if (hotAirBalloon.position.x + hotAirBalloon.speed.x >= map.size.width && hotAirBalloon.speed.x > 0) {
-            hotAirBalloon.speed.x = 0;
-            hotAirBalloon.position.x = map.size.width;
-        }
-
-        // apply speed
-        hotAirBalloon.position.y += hotAirBalloon.speed.y * SPEED_COEF;
-        // lets fly only if we're not on ground
-        if (hotAirBalloon.position.y > 0) {
-            hotAirBalloon.position.x += hotAirBalloon.speed.x * SPEED_COEF;
-        }
+        hotAirBalloon.move(vektor, map.size);
         step++;
     }
-});
+};
 
 function getTestHotAirBalloon() {
     return new HotAirBalloon(
@@ -320,52 +334,22 @@ function testWind() {
 
 function testTemerature() {
     var hotAirBalloon = getTestHotAirBalloon();
-    var temperature = new Temperature(75);
+    var temperature = new Temperature(30);
+    console.log(hotAirBalloon.speed);
     for (var i = 0; i < 100; i++) {
-        console.log(hotAirBalloon.speed);
         hotAirBalloon.applyTemperature(temperature);
         console.log(hotAirBalloon.speed);
     }
 }
 
-testWind();
-testTemerature();
-
-setInterval(function() {
-    var step = game.getStep();
-    // if (step % 10 == 0) {
-    //     game.turnGasJetOn();
-    // }
-    // if (step % 10 == 5) {
-    //     game.turnGasJetOff();
-    // }
-
-    // if (step % 20 == 0) {
-    //     game.closeHole();
-    // }
-
-    // if (step % 20 == 10) {
-    //     game.openHole();
-    // }
-
-    var log = game.getLog();
-    $('#log').html(log.join('<br/>'));
-    game.lifeCycleStep();
-}, 100);
-$(document).keydown(function(e) {
-    switch (e.keyCode) {
-        case 38:
-            game.turnGasJetOn();
-            break;
-        case 40:
-            game.toggleHole();
-            break;
+function test() {
+    var hotAirBalloon = getTestHotAirBalloon();
+    var temperature = new Temperature(30);
+    var wind = new Vektor(10, 0);
+    console.log(hotAirBalloon.speed);
+    for (var i = 0; i < 100; i++) {
+        hotAirBalloon.applyWind(wind);
+        hotAirBalloon.applyTemperature(temperature);
+        console.log(hotAirBalloon.speed);
     }
-});
-$(document).keyup(function(e) {
-    switch (e.keyCode) {
-        case 38:
-            game.turnGasJetOff();
-            break;
-    }
-});
+}
