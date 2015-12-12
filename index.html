@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <style>
+            body {
+                margin: 0px;
+                padding: 0px;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="canvas" width="1024" height="768"></canvas>
+
+        <script src="./scripts/functions.js"></script>
+        <script src="./scripts/models.js"></script>
+        <script src="./scripts/views.js"></script>
+        <script src="./scripts/events.js"></script>
+
+        <script>
+            var canvas = document.getElementById('canvas');
+            var context = canvas.getContext('2d');
+
+            Montgolfiera.balloon.centerPosition.x = canvas.width / 2;
+            Montgolfiera.balloon.centerPosition.y = canvas.height / 2;
+            ViewRegistry.registerView(MontgolfieraView);
+
+
+            function updateGameState() {
+                Montgolfiera.balloon.centerPosition.x += getRandomInt(-5, 5);
+                Montgolfiera.balloon.centerPosition.y += getRandomInt(-5, 5);
+            }
+
+            (function gameLoop() {
+                // update game state
+                updateGameState();
+
+                // clear canvas
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                // render game state
+                ViewRegistry.render(context);
+
+                // loop again
+                requestAnimFrame(gameLoop);
+            })();
+        </script>
+    </body>
+</html>
