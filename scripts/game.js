@@ -39,7 +39,7 @@ var Game = function(width, height) {
     }
 
     this.lifeCycleStep = function() {
-        var vektor = new Vektor(0, 0);
+        var force = new Vektor(0, 0);
         var airSpace = this.map.findAirSpace(this.hotAirBalloon.position);
         // recalc balloon temperature
         // open air
@@ -55,15 +55,15 @@ var Game = function(width, height) {
 
         // recalc balloon moving vektor only if we're in air
         if (this.hotAirBalloon.position.y > 0) {
-            vektor = this.hotAirBalloon.applyWind(vektor, airSpace.wind);
+            force = this.hotAirBalloon.applyWind(force, airSpace.wind);
         }
 
         // recalc balloon speed according to balloon temperature
-        vektor = this.hotAirBalloon.applyTemperature(vektor, airSpace.temperature);
-        vektor = this.hotAirBalloon.applyGroundForce(vektor);
-        this.speed = vektor;
+        force = this.hotAirBalloon.applyTemperature(force, airSpace.temperature);
+        force = this.hotAirBalloon.applyGroundForce(force);
+        this.hotAirBalloon.applyForce(force);
 
-        this.hotAirBalloon.move(vektor);
+        this.hotAirBalloon.move();
         this.hotAirBalloon.checkColisions(this.map);
         step++;
     }

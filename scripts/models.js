@@ -37,6 +37,15 @@ Vektor.sub = function(vektor1, vektor2) {
     return new Vektor(vektor1.x - vektor2.x, vektor1.y - vektor2.y);
 }
 
+Vektor.aimTo = function(vektor, toVektor, koef) {
+    if (typeof koef === 'undefined') {
+        koef = 0.01;
+    }
+    var sub = Vektor.sub(toVektor, vektor);
+    sub.mulScalar(koef);
+    return Vektor.sum(vektor, sub);
+}
+
 var Space = function(point, size) {
     this.point = point;
     this.size = size;

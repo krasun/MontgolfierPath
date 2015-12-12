@@ -6,9 +6,7 @@ var HotAirBalloon = function(position, balloon, basket, gasJet, speed) {
     this.speed = speed;
 }
 HotAirBalloon.prototype.applyWind = function(speed, wind) {
-    var sub = Vektor.sub(wind, speed);
-    sub.mulScalar(WIND_COEF);
-    return Vektor.sum(speed, sub);
+    return Vektor.aimTo(speed, wind);
 }
 HotAirBalloon.prototype.applyTemperature = function(speed, temperature) {
     var resultSpeed = new Vektor(speed.x, speed.y);
@@ -21,13 +19,16 @@ HotAirBalloon.prototype.applyGroundForce = function(speed) {
     resultSpeed.y -= Gv;
     return resultSpeed;
 }
-HotAirBalloon.prototype.move = function(vektor) {
 
+HotAirBalloon.prototype.applyForce = function(force) {
+    this.speed = Vektor.aimTo(this.speed, force, 0.1);
+}
+HotAirBalloon.prototype.move = function(vektor) {
     // apply speed
-    this.position.y += vektor.y * SPEED_COEF; // popravka na G
+    this.position.y += this.speed.y * SPEED_COEF; // popravka na G
     // lets fly only if we're not on ground
     if (this.position.y > this.getSize().height) {
-        this.position.x += vektor.x * SPEED_COEF;
+        this.position.x += this.speed.x * SPEED_COEF;
     }
 
 }
