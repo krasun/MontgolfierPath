@@ -63,8 +63,8 @@ var Game = function(width, height) {
         force = this.hotAirBalloon.applyGroundForce(force);
         this.hotAirBalloon.applyForce(force);
 
-        this.hotAirBalloon.move();
         this.hotAirBalloon.checkColisions(this.map);
+        this.hotAirBalloon.move();
         step++;
     }
 };

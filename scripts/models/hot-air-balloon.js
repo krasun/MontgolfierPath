@@ -25,28 +25,28 @@ HotAirBalloon.prototype.applyForce = function(force) {
 }
 HotAirBalloon.prototype.move = function(vektor) {
     // apply speed
-    this.position.y += this.speed.y * SPEED_COEF; // popravka na G
-    // lets fly only if we're not on ground
-    if (this.position.y > this.getSize().height) {
-        this.position.x += this.speed.x * SPEED_COEF;
-    }
-
+    this.position.y += this.speed.y * SPEED_COEF;
+    this.position.x += this.speed.x * SPEED_COEF;
 }
 
 HotAirBalloon.prototype.checkColisions = function(map) {
     var bounds = map.size;
-    if (this.position.y <= this.getSize().height) {
+    if (this.position.y <= this.getSize().height && this.speed.y < 0) {
         this.position.y = this.getSize().height;
+        this.speed = new Vektor(0, 0); // stop
     }
-    if (this.position.y >= bounds.height - this.getSize().height) {
+    if (this.position.y >= bounds.height - this.getSize().height && this.speed.y > 0) {
         this.position.y = bounds.height - this.getSize().height;
+        this.speed.y = 0;
     }
 
-    if (this.position.x <= this.getSize().width) {
+    if (this.position.x <= this.getSize().width && this.speed.x < 0) {
         this.position.x = this.getSize().width;
+        this.speed.x = 0;
     }
-    if (this.position.x >= bounds.width - this.getSize().width) {
+    if (this.position.x >= bounds.width - this.getSize().width && this.speed.x > 0) {
         this.position.x = bounds.width - this.getSize().width;
+        this.speed.x = 0;
     }
 }
 
