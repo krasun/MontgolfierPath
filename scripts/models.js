@@ -1,12 +1,12 @@
-var GasJet = {
+var MontgolfieraGasJet = {
     isTurnedOn: false,
 
     turnOn: function () {
-        GasJet.isTurnedOn = true;
+        MontgolfieraGasJet.isTurnedOn = true;
     },
 
     turnOff: function () {
-        GasJet.isTurnedOn = false;
+        MontgolfieraGasJet.isTurnedOn = false;
     }
 };
 
@@ -22,7 +22,7 @@ var BalloonHole = {
     }
 };
 
-var Balloon = {
+var MontgolfieraBalloon = {
     centerPosition: {
         x: 0,
         y: 0
@@ -31,7 +31,7 @@ var Balloon = {
 };
 
 var Montgolfiera = {
-    balloon: Balloon,
+    balloon: MontgolfieraBalloon,
     balloonHole: BalloonHole,
-    gasJet: GasJet
+    gasJet: MontgolfieraGasJet
 };

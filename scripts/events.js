@@ -8,7 +8,7 @@ document.addEventListener('keyup', function (event) {
             break;
         // down
         case 40:
-            GasJet.turnOff();
+            MontgolfieraGasJet.turnOff();
 
             event.preventDefault();
             break;
@@ -25,7 +25,7 @@ document.addEventListener('keydown', function (event) {
             break;
         // down
         case 40:
-            GasJet.turnOn();
+            MontgolfieraGasJet.turnOn();
 
             event.preventDefault();
             break;
