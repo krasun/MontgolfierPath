@@ -1,11 +1,3 @@
-var TEMPERATURE_COEF_NEAR_FLAME = 0.001;
-var TEMPERATURE_COEF_OPEN_AIR = 0.04;
-var TEMPERATURE_COEF_CLOSED_BALLOON = 0.01;
-var SPEED_COEF = 1;
-var WIND_COEF = 0.01 * SPEED_COEF;
-var TEMPERATURE_TO_SPEED_COEF = 0.02 * SPEED_COEF;
-var G = 0.79;
-
 function roundFloat(float) {
     return Math.round(float * 100) / 100;
 }
@@ -167,8 +159,6 @@ HotAirBalloon.prototype.move = function(vektor) {
 }
 
 HotAirBalloon.prototype.checkColisions = function(bounds) {
-
-    // check collision
     if (this.position.y <= 0) {
         this.position.y = 0;
     }
