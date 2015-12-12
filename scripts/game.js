@@ -1,6 +1,6 @@
 var Game = function(width, height) {
     this.hotAirBalloon = new HotAirBalloon(
-        new Point(height / 2, 0),
+        new Point(width / 2, 0),
         new Balloon(3000, new Size(15, 15), new Temperature(60)),
         new Basket(new Size(3, 2)),
         new GasJet(new Temperature(700), 0, 100, 100),
@@ -59,6 +59,7 @@ var Game = function(width, height) {
 
         // recalc balloon speed according to balloon temperature
         vektor = this.hotAirBalloon.applyTemperature(vektor, airSpace.temperature);
+        vektor = this.hotAirBalloon.applyGroundForce(vektor);
         this.speed = vektor;
 
         this.hotAirBalloon.move(vektor);
