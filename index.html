@@ -17,13 +17,14 @@
         <script src="./scripts/events.js"></script>
 
         <script>
-            var canvas = document.getElementById('canvas');
-            var context = canvas.getContext('2d');
+            var
+                canvas = document.getElementById('canvas'),
+                context = canvas.getContext('2d')
+            ;
 
             Montgolfiera.balloon.centerPosition.x = canvas.width / 2;
             Montgolfiera.balloon.centerPosition.y = canvas.height / 2;
             ViewRegistry.registerView(MontgolfieraView);
-
 
             function updateGameState() {
                 Montgolfiera.balloon.centerPosition.x += getRandomInt(-5, 5);
