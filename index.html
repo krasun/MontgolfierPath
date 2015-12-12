@@ -14,6 +14,8 @@
         <script src="./scripts/consts.js"></script>
         <script src="./scripts/functions.js"></script>
         <script src="./scripts/models.js"></script>
+        <script src="./scripts/models/hot-air-balloon.js"></script>
+        <script src="./scripts/models/map.js"></script>
         <script src="./scripts/views.js"></script>
         <script src="./scripts/events.js"></script>
         <script src="./scripts/game.js"></script>
@@ -21,15 +23,16 @@
         <script>
             var
                 canvas = document.getElementById('canvas'),
-                context = canvas.getContext('2d')
-                game = new Game(canvas.width, canvas.height)
-                view = new MontgolfieraView(game.hotAirBalloon)
+                context = canvas.getContext('2d'),
+                game = new Game(50000, canvas.height),
+                view = new MontgolfieraView(game.hotAirBalloon),
+                mapView = new MapView(game.map)
             ;
 
             ViewRegistry.registerView(view);
+            ViewRegistry.registerView(mapView);
 
             function updateGameState() {
-                // console.log(game.getHotAirBalloon().position.y);
                 game.lifeCycleStep();
                 // Montgolfiera.balloon.centerPosition.x = game.getHotAirBalloon().position.x;
                 // Montgolfiera.balloon.centerPosition.y = canvas.height - game.getHotAirBalloon().position.y;
@@ -41,6 +44,8 @@
 
                 // clear canvas
                 context.clearRect(0, 0, canvas.width, canvas.height);
+                // set camera center of canvas
+                context.cameraCenter = game.hotAirBalloon.position.x - canvas.width / 2;
                 // render game state
                 ViewRegistry.render(context);
 

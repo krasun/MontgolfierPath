@@ -1,5 +1,5 @@
 function preparePoint(point, context) {
-    return new Point(point.x, context.canvas.height - point.y);
+    return new Point(point.x - context.cameraCenter, context.canvas.height - point.y);
 }
 
 var BalloonView = function(montgolfiera) {
@@ -97,6 +97,23 @@ var MontgolfieraView = function(montgolfiera) {
         this.balloonHoleView.render(context);
     }
 };
+
+var MapView = function(map) {
+    this.render = function(context) {
+        context.beginPath(); 
+        context.lineWidth="2";
+        context.strokeStyle="brown"; // Green path
+        var point = preparePoint(new Point(0, 0), context);
+        context.moveTo(point.x, point.y);
+        for (var i in map.relief) {
+            point = preparePoint(map.relief[i], context);
+            context.lineTo(point.x, point.y);
+        }
+        point = preparePoint(new Point(map.width, 0), context);
+        context.lineTo(point.x, point.y);
+        context.stroke(); // Draw it
+    }
+}
 
 var ViewRegistry = {
     views: [],
