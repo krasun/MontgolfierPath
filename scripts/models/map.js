@@ -40,6 +40,35 @@ Map.prototype.shuffleRelief = function() {
     }
 }
 
+Map.prototype.putLandingPlace = function(position, width, height) {
+    var relief = [],
+        inserted = false;
+    if (typeof height === 'undefined') {
+        height = 0;
+    }
+
+    for (var i = 0; i < this.relief.length; i++) {
+        var current = this.relief[i];
+        if (inserted || (position.x - width / 2 >= current.x)) {
+            relief.push(current);
+
+            continue;
+        }
+        // insert start of place
+        relief.push(new Point(position.x - width / 2, height));
+        while (this.relief[i] && (this.relief[i].x <= position.x + width / 2)) {
+            i++;
+        }
+        // insert end of place
+        relief.push(new Point(position.x + width / 2, height));
+        inserted = true;
+    }
+    if ( ! inserted) {
+        throw new Error('Putting landing place failed');
+    }
+    this.relief = relief;
+};
+
 Map.prototype.findAirSpace = function(point) {
     for (var i in this.airSpaces) {
         var airSpace = this.airSpaces[i];

@@ -9,6 +9,7 @@ var Game = function(width, height) {
     this.map = new Map(new Size(width, height));
     this.map.shuffleAirSpaces();
     this.map.shuffleRelief();
+    this.map.putLandingPlace(this.hotAirBalloon.position, 1000);
     var step = 0;
 
     this.getStep = function() {
