@@ -9,7 +9,7 @@
         </style>
     </head>
     <body>
-        <canvas id="canvas" width="1024" height="768"></canvas>
+        <canvas id="canvas"></canvas>
 
         <script src="./scripts/consts.js"></script>
         <script src="./scripts/functions.js"></script>
@@ -24,10 +24,18 @@
             var
                 canvas = document.getElementById('canvas'),
                 context = canvas.getContext('2d'),
-                game = new Game(50000, canvas.height),
+                body = document.body,
+                html = document.documentElement,
+                width = body.clientWidth,
+                height = Math.max(body.scrollHeight, body.offsetHeight,
+                               html.clientHeight, html.scrollHeight, html.offsetHeight) - 10,
+                game = new Game(50000, height),
                 view = new MontgolfieraView(game.hotAirBalloon),
                 mapView = new MapView(game.map)
             ;
+
+            canvas.width = width;
+            canvas.height = height;
 
             ViewRegistry.registerView(view);
             ViewRegistry.registerView(mapView);
