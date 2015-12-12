@@ -70,6 +70,7 @@ var Temperature = function(value) {
     }
 }
 
+// todo gas eating
 var GasJet = function(temperature, state, volume, maxVolume) {
     this.temperature = temperature;
     this.state = state;
@@ -88,8 +89,8 @@ var GasJet = function(temperature, state, volume, maxVolume) {
     }
 }
 
-var Basket = function(weight) {
-    this.weight = weight;
+var Basket = function(size) {
+    this.size = size;
 }
 
 var AirSpace = function(position, wind, size, temperature) {
@@ -152,26 +153,36 @@ HotAirBalloon.prototype.move = function(vektor) {
     // apply speed
     this.position.y += (vektor.y - G) * SPEED_COEF; // popravka na G
     // lets fly only if we're not on ground
-    if (this.position.y > 0) {
+    if (this.position.y > this.getSize().height) {
         this.position.x += vektor.x * SPEED_COEF;
     }
 
 }
 
 HotAirBalloon.prototype.checkColisions = function(bounds) {
-    if (this.position.y <= 0) {
-        this.position.y = 0;
+    if (this.position.y <= this.getSize().height) {
+        this.position.y = this.getSize().height;
     }
-    if (this.position.y >= bounds.height) {
-        this.position.y = bounds.height;
+    if (this.position.y >= bounds.height - this.getSize().height) {
+        this.position.y = bounds.height - this.getSize().height;
     }
 
-    if (this.position.x <= 0) {
-        this.position.x = 0;
+    if (this.position.x <= this.getSize().width) {
+        this.position.x = this.getSize().width;
     }
-    if (this.position.x >= bounds.width) {
-        this.position.x = bounds.width;
+    if (this.position.x >= bounds.width - this.getSize().width) {
+        this.position.x = bounds.width - this.getSize().width;
     }
+}
+
+HotAirBalloon.prototype.getSize = function() {
+    if (this.size) {
+        return this.size;
+    }
+    return this.size = new Size(
+        this.balloon.size.width,
+        this.balloon.size.height * 1.25 + this.basket.size.height
+    );
 }
 
 var Map = function(size) {

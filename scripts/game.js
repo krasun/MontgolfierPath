@@ -1,8 +1,8 @@
 var Game = function(width, height) {
     var hotAirBalloon = new HotAirBalloon(
         new Point(height / 2, 0),
-        new Balloon(3000, new Size(10, 15), new Temperature(60)),
-        new Basket(100),
+        new Balloon(3000, new Size(15, 15), new Temperature(60)),
+        new Basket(new Size(3, 2)),
         new GasJet(new Temperature(700), 0, 100, 100),
         new Vektor(0, 0)
     );
@@ -67,45 +67,3 @@ var Game = function(width, height) {
         step++;
     }
 };
-
-function getTestHotAirBalloon() {
-    return new HotAirBalloon(
-        new Point(0, 10),
-        new Balloon(3000, new Size(10, 15), new Temperature(60)),
-        new Basket(100),
-        new GasJet(new Temperature(700), 0, 100, 100),
-        new Vektor(0, 0)
-    );
-}
-
-function testWind() {
-    var hotAirBalloon = getTestHotAirBalloon();
-    var wind = new Vektor(10, 0);
-    for (var i = 0; i < 100; i++) {
-        console.log(hotAirBalloon.speed);
-        hotAirBalloon.applyWind(wind);
-        console.log(hotAirBalloon.speed);
-    }
-}
-
-function testTemerature() {
-    var hotAirBalloon = getTestHotAirBalloon();
-    var temperature = new Temperature(30);
-    console.log(hotAirBalloon.speed);
-    for (var i = 0; i < 100; i++) {
-        hotAirBalloon.applyTemperature(temperature);
-        console.log(hotAirBalloon.speed);
-    }
-}
-
-function test() {
-    var hotAirBalloon = getTestHotAirBalloon();
-    var temperature = new Temperature(30);
-    var wind = new Vektor(10, 0);
-    console.log(hotAirBalloon.speed);
-    for (var i = 0; i < 100; i++) {
-        hotAirBalloon.applyWind(wind);
-        hotAirBalloon.applyTemperature(temperature);
-        console.log(hotAirBalloon.speed);
-    }
-}

@@ -19,16 +19,15 @@ var GondolaView = function(montgolfiera) {
     this.render = function (context) {
         var point = preparePoint(montgolfiera.position, context);
         var
+            gondola = montgolfiera.basket,
             balloon = montgolfiera.balloon,
             balloonDistance = balloon.radius * 0.25, // 25% of balloon radius
-            gondolaHeight = balloon.radius * 0.25,
-            gondolaWidth = balloon.radius * 0.5,
-            gondolaPositionX = point.x - gondolaWidth / 2,
+            gondolaPositionX = point.x - gondola.size.width / 2,
             gondolaPositionY = balloonDistance + balloon.radius + point.y
         ;
 
         context.beginPath();
-        context.rect(gondolaPositionX, gondolaPositionY, gondolaWidth, gondolaHeight);
+        context.rect(gondolaPositionX, gondolaPositionY, gondola.size.width, gondola.size.height);
         context.fillStyle = 'brown';
         context.fill();
         context.lineWidth = 1;
@@ -110,4 +109,3 @@ var ViewRegistry = {
         });
     }
 };
-
