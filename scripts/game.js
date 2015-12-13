@@ -2,7 +2,7 @@ var Game = function(width, height) {
     this.debug = false;
 
     this.hotAirBalloon = new HotAirBalloon(
-        new Point(width / 2, 0),
+        new Point(width / 2, 15 * 1.25 + 2),
         new Balloon(3000, new Size(15, 15), new Temperature(60)),
         new Basket(new Size(3, 2)),
         new GasJet(new Temperature(700), 0, 100, 100),
