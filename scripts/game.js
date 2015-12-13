@@ -19,7 +19,7 @@ var Game = function(width, height) {
     }
 
     this.getLog = function() {
-        var str = ['Step: ' + step];
+        var str = ['Frame: ' + step];
         str.push('Temperature: ' + this.hotAirBalloon.balloon.temperature.toString());
         str.push('Balloon position: ' + this.hotAirBalloon.position.toString());
         str.push('Balloon speed: ' + this.hotAirBalloon.speed.toString());

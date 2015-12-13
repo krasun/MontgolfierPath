@@ -18,6 +18,16 @@ document.addEventListener('keyup', function (event) {
 
             event.preventDefault();
             break;
+        // space
+        case 32:
+            paused = ! paused;
+
+            if (! paused) {
+                gameLoop();
+            }
+
+            event.preventDefault();
+            break;
     }
 });
 

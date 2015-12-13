@@ -29,7 +29,8 @@
                 width = body.clientWidth,
                 height = Math.max(body.scrollHeight, body.offsetHeight,
                                html.clientHeight, html.scrollHeight, html.offsetHeight) - 10,
-                game = new Game(50000, height)
+                game = new Game(50000, height),
+                paused = false
             ;
 
             canvas.width = width;
@@ -46,7 +47,7 @@
                 // Montgolfiera.balloon.centerPosition.y = canvas.height - game.getHotAirBalloon().position.y;
             }
 
-            (function gameLoop() {
+            function gameLoop() {
                 // update game state
                 updateGameState();
 
@@ -57,9 +58,13 @@
                 // render game state
                 ViewRegistry.render(context);
 
-                // loop again
-                requestAnimFrame(gameLoop);
-            })();
+                if (! paused) {
+                    // loop again
+                    requestAnimFrame(gameLoop);
+                }
+            }
+            // start looping
+            gameLoop();
         </script>
     </body>
 </html>
