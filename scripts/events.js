@@ -28,6 +28,13 @@ document.addEventListener('keyup', function (event) {
 
             event.preventDefault();
             break;
+        // b
+        case 66:
+            var b = game.addAirBalloon();
+            ViewRegistry.registerView(new AirBalloonView(b));
+
+            event.preventDefault();
+            break;
     }
 });
 

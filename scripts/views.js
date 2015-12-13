@@ -15,6 +15,29 @@ var BalloonView = function(montgolfiera) {
     }
 };
 
+var AirBalloonView = function(balloon) {
+    this.render = function (context) {
+        var point = preparePoint(balloon.position, context);
+        context.beginPath();
+        // context.arc(point.x, point.y, balloon.radius, 0, 2 * Math.PI, false);
+        context.ellipse(
+            point.x,
+            point.y,
+            balloon.size.width / 2,
+            balloon.size.height / 2,
+            0,
+            0,
+            2 * Math.PI, false,
+            false
+        );
+        context.fillStyle = 'gray';
+        context.fill();
+        context.lineWidth = 1;
+        context.strokeStyle = '#8C1A7E';
+        context.stroke();
+    }
+};
+
 var GondolaView = function(montgolfiera) {
     this.render = function (context) {
         var point = preparePoint(montgolfiera.position, context);
@@ -86,15 +109,15 @@ var BalloonHoleView = function(montgolfiera) {
 };
 
 var MontgolfieraView = function(montgolfiera) {
-    this.balloonView = new BalloonView(montgolfiera);
-    this.balloonHoleView = new BalloonHoleView(montgolfiera);
-    this.gondolaView = new GondolaView(montgolfiera);
-    this.gasJetView = new GasJetView(montgolfiera);
+    var balloonView = new BalloonView(montgolfiera),
+        balloonHoleView = new BalloonHoleView(montgolfiera),
+        gondolaView = new GondolaView(montgolfiera),
+        gasJetView = new GasJetView(montgolfiera);
     this.render = function (context) {
-        this.balloonView.render(context);
-        this.gondolaView.render(context);
-        this.gasJetView.render(context);
-        this.balloonHoleView.render(context);
+        balloonView.render(context);
+        gondolaView.render(context);
+        gasJetView.render(context);
+        balloonHoleView.render(context);
     }
 };
 
@@ -137,18 +160,26 @@ var DebugView = function(game) {
             context.fillText(logs[i], context.canvas.width - 200, 20 + 12 * i);
         }
 
-        var position = preparePoint(game.hotAirBalloon.position, context);
+        for (var i in game.objects) {
+            new FlyingObjectDebugView(game.objects[i]).render(context);
+        }
+    }
+}
+
+var FlyingObjectDebugView = function(flyingObject) {
+    this.render = function(context) {
+        var position = preparePoint(flyingObject.position, context);
 
         // wind
         context.beginPath();
         context.lineWidth = '1';
         context.strokeStyle = 'gray';
-        var airSpace = game.map.findAirSpace(game.hotAirBalloon.position);
+        var airSpace = game.map.findAirSpace(flyingObject.position);
         drawArrow(context, position, new Vector(airSpace.wind.x, -airSpace.wind.y));
         context.stroke();
 
         // temperature difference
-        var temperatureForce = game.hotAirBalloon.getPullingForce(airSpace.temperature);
+        var temperatureForce = flyingObject.getPullingForce(airSpace.temperature);
         if (temperatureForce.getLength() > 0) {
             context.beginPath();
             context.lineWidth = '1';
@@ -161,10 +192,10 @@ var DebugView = function(game) {
         context.beginPath();
         context.lineWidth = '1';
         context.strokeStyle = 'black';
-        drawArrow(context, position, new Vector(0, Gv * 20));
+        drawArrow(context, position, new Vector(0, Gv * 20 * 100));
         context.stroke();
 
-        var speed = new Vector(game.hotAirBalloon.speed.x, game.hotAirBalloon.speed.y);
+        var speed = new Vector(flyingObject.speed.x, flyingObject.speed.y);
         if (speed.getLength() > 0) {
             context.beginPath();
             context.lineWidth = '2';

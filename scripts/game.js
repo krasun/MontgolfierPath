@@ -4,15 +4,18 @@ var Game = function(width, height) {
     this.hotAirBalloon = new HotAirBalloon(
         new Point(width / 2, 15 * 1.25 + 2),
         new Balloon(3000, new Size(15, 15), new Temperature(60)),
-        new Basket(new Size(3, 2)),
+        new Basket(new Size(3, 2), 100),
         new GasJet(new Temperature(700), 0, 100, 100),
         new Vector(0, 0)
     );
+    this.hotAirBalloon.position = new Point(width / 2, this.hotAirBalloon.size.height);
     this.map = new Map(new Size(width, height));
     this.map.shuffleAirSpaces();
     this.map.shuffleRelief();
     this.map.putLandingPlace(this.hotAirBalloon.position, 1000);
     var step = 0;
+
+    this.objects = [this.hotAirBalloon];
 
     this.getStep = function() {
         return step;
@@ -41,32 +44,37 @@ var Game = function(width, height) {
     }
 
     this.lifeCycleStep = function() {
-        var force = new Vector(0, 0);
-        var airSpace = this.map.findAirSpace(this.hotAirBalloon.position);
-        // recalc balloon temperature
-        // open air
-        if (this.hotAirBalloon.balloon.hole.isOpened()) {
-            this.hotAirBalloon.balloon.temperature.addTemperature(airSpace.temperature, TEMPERATURE_COEF_OPEN_AIR);
-        } else {
-            this.hotAirBalloon.balloon.temperature.addTemperature(airSpace.temperature, TEMPERATURE_COEF_CLOSED_BALLOON);
-        }
-        // Gas jet
-        if (this.hotAirBalloon.gasJet.isTurnedOn()) {
-            this.hotAirBalloon.balloon.temperature.addTemperature(this.hotAirBalloon.gasJet.temperature, TEMPERATURE_COEF_NEAR_FLAME);
-        }
+        for (var i in this.objects) {
+            var object = this.objects[i];
 
-        // recalc balloon moving vector only if we're in air
-        if (this.hotAirBalloon.position.y > 0) {
-            force = this.hotAirBalloon.applyWind(force, airSpace.wind);
+            var force = new Vector(0, 0);
+            var airSpace = this.map.findAirSpace(object.position);
+            // recalc balloon temperature
+            object.recalcTemerature(airSpace.temperature);
+            // console.log(object, object.recalcTemerature);
+
+            force = object.applyWind(force, airSpace.wind);
+            force = object.applyTemperature(force, airSpace.temperature);
+            force = object.applyGroundForce(force);
+            object.applyForce(force);
+
+            object.checkColisions(this.map);
+            object.move();
         }
-
-        // recalc balloon speed according to balloon temperature
-        force = this.hotAirBalloon.applyTemperature(force, airSpace.temperature);
-        force = this.hotAirBalloon.applyGroundForce(force);
-        this.hotAirBalloon.applyForce(force);
-
-        this.hotAirBalloon.checkColisions(this.map);
-        this.hotAirBalloon.move();
         step++;
+    }
+
+    this.addAirBalloon = function() {
+        var balloon = new AirBalloon(
+            this.hotAirBalloon.position.clone(),
+            new Vector(0, 0),
+            0.5,
+            new Size(1, 1),
+            new Temperature(20),
+            DENSITY_HELIUM
+        );
+        this.objects.push(balloon);
+
+        return balloon;
     }
 };

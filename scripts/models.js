@@ -9,6 +9,9 @@ var Point = function(x, y) {
     this.toString = function() {
         return "(" + roundFloat(this.x, 2) + ", " + roundFloat(this.y, 2) + ")";
     }
+    this.clone = function() {
+        return new Point(this.x, this.y);
+    }
 }
 
 var Vector = function(x, y) {
@@ -27,6 +30,9 @@ var Vector = function(x, y) {
         this.x *= n;
         this.y *= n;
     }
+    this.clone = function() {
+        return new Vector(this.x, this.y);
+    }
 }
 
 Vector.sum = function(vector1, vector2) {
@@ -37,6 +43,7 @@ Vector.sub = function(vector1, vector2) {
     return new Vector(vector1.x - vector2.x, vector1.y - vector2.y);
 }
 
+// @todo: it does not work as expected
 Vector.aimTo = function(vector, toVector, koef) {
     if (typeof koef === 'undefined') {
         koef = 0.01;
@@ -98,8 +105,9 @@ var GasJet = function(temperature, state, volume, maxVolume) {
     }
 }
 
-var Basket = function(size) {
+var Basket = function(size, weight) {
     this.size = size;
+    this.weight = weight;
 }
 
 var AirSpace = function(position, wind, size, temperature) {
