@@ -1,4 +1,6 @@
 var Game = function(width, height) {
+    this.debug = false;
+
     this.hotAirBalloon = new HotAirBalloon(
         new Point(width / 2, 0),
         new Balloon(3000, new Size(15, 15), new Temperature(60)),

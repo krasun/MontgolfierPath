@@ -12,6 +12,12 @@ document.addEventListener('keyup', function (event) {
 
             event.preventDefault();
             break;
+        // D
+        case 68:
+            game.debug = ! game.debug;
+
+            event.preventDefault();
+            break;
     }
 });
 
@@ -29,6 +35,7 @@ document.addEventListener('keydown', function (event) {
 
             event.preventDefault();
             break;
+
     }
 });
 

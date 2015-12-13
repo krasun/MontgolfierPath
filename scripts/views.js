@@ -117,18 +117,26 @@ var MapView = function(map) {
 
 var StatsView = function(game) {
     this.render = function(context) {
-        context.font = "12px Consolas";
-        // context.fillText("Balloon temperature: " + roundFloat(game.hotAirBalloon.balloon.temperature.value), 10, 10);
-        var logs = game.getLog();
-        for (var i in logs) {
-            context.fillText(logs[i], 10, 20 + 12 * i);
-        }
-        // context.fillText("Position: " + game.hotAirBalloon.position.toString(), 10, 10);
+        var airSpace = game.map.findAirSpace(game.hotAirBalloon.position);
+        context.font = "16px Consolas";
+        context.fillStyle = "green";
+        context.fillText("Balloon temperature: " + roundFloat(game.hotAirBalloon.balloon.temperature.value), 10, 20);
+        context.fillText("Air temperature: " + airSpace.temperature.toString(), 10, 40);
+        context.fillText("Wind: " + airSpace.wind.toString(), 10, 60);
     }
 }
 
 var DebugView = function(game) {
     this.render = function(context) {
+        if (! game.debug) {
+            return;
+        }
+        context.font = "12px Consolas";
+        var logs = game.getLog();
+        for (var i in logs) {
+            context.fillText(logs[i], context.canvas.width - 200, 20 + 12 * i);
+        }
+
         var position = preparePoint(game.hotAirBalloon.position, context);
 
         // wind

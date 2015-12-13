@@ -1,4 +1,4 @@
-function roundFloat(float) {
+﻿function roundFloat(float) {
     return Math.round(float * 100) / 100;
 }
 
@@ -75,7 +75,7 @@ var Temperature = function(value) {
     }
 
     this.toString = function() {
-        return roundFloat(this.value, 2) + '.';
+        return roundFloat(this.value, 2) + '°';
     }
 }
 
