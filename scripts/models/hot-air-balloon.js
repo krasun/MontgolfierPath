@@ -6,7 +6,7 @@ var HotAirBalloon = function(position, balloon, basket, gasJet, speed) {
     this.speed = speed;
 }
 HotAirBalloon.prototype.applyWind = function(speed, wind) {
-    return Vektor.aimTo(speed, wind);
+    return Vektor.aimTo(speed, wind, WIND_COEF);
 }
 HotAirBalloon.prototype.applyTemperature = function(speed, temperature) {
     return Vektor.aimTo(speed, this.getPullingForce(temperature), TEMPERATURE_TO_SPEED_COEF);

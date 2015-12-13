@@ -14,23 +14,37 @@ var Map = function(size) {
  * @return {boolean}
  */
 Map.prototype.shuffleAirSpaces = function(levelWidth, levelHeight) {
-    // if (typeof levelWidth === 'undefined' || levelHeight === 0) {
-    //     levelWidth = this.size.width;
-    // }
-    // if (typeof levelHeight === 'undefined') {
-    //     levelHeight = 10; // default
-    // }
+    if (typeof levelWidth === 'undefined' || levelHeight === 0) {
+        levelWidth = 100; //this.size.width;
+    }
+    if (typeof levelHeight === 'undefined') {
+        levelHeight = 100; // default
+    }
+    this.airSpaces = [];
+    for (var y = 0; y < this.size.height; y += levelHeight) {
+        var direction = Math.random() > 0.4 ? 1 : -1;
+        for (var x = 0; x < this.size.width; x += levelWidth) {
+            this.airSpaces.push(new AirSpace(
+                new Point(x, y),
+                new Vektor(
+                    getRandomInt(30, 100) * direction,
+                    getRandomInt(-levelHeight / 5, levelHeight / 5)
+                ),
+                new Size(levelWidth, levelHeight),
+                new Temperature(getRandomInt(20, 40))
+            ));
+        }
+    }
     // FUCK OFF!
-    this.airSpaces = [new AirSpace(
-        new Point(0, 0),
-        new Vektor(
-            Math.random() * 100 * 2 - 100,
-            0// Math.random() * this.size.height * 2 - this.size.height
-        ),
-        this.size,
-        new Temperature(30) // ?
-    )];
-    // for (var i = 0; i < this.size )
+    // this.airSpaces = [new AirSpace(
+    //     new Point(0, 0),
+    //     new Vektor(
+    //         Math.random() * 100 * 2 - 100,
+    //         0// Math.random() * this.size.height * 2 - this.size.height
+    //     ),
+    //     this.size,
+    //     new Temperature(30) // ?
+    // )];
 }
 
 Map.prototype.shuffleRelief = function() {

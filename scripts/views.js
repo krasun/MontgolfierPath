@@ -144,8 +144,10 @@ var DebugView = function(game) {
         context.lineWidth = '1';
         context.strokeStyle = 'gray';
         var airSpace = game.map.findAirSpace(game.hotAirBalloon.position);
-        drawArrow(context, position, airSpace.wind);
+        drawArrow(context, position, new Vektor(airSpace.wind.x, -airSpace.wind.y));
         context.stroke();
+
+        // temperature difference
         var temperatureForce = game.hotAirBalloon.getPullingForce(airSpace.temperature);
         if (temperatureForce.getLenght() > 0) {
             context.beginPath();
