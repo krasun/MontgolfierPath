@@ -154,6 +154,7 @@ var StatsView = function(game) {
         context.fillText("Release down to close balloon hole", 20, 170);
         context.fillText("Press 'B' to launch test air balloon", 20, 190);
         context.fillText("Press 'D' to toggle debug information", 20, 210);
+        context.fillText("Press 'Pause' button to pause game scene", 20, 230);
     }
 }
 
