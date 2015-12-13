@@ -6,7 +6,7 @@ var Game = function(width, height) {
         new Balloon(3000, new Size(15, 15), new Temperature(60)),
         new Basket(new Size(3, 2)),
         new GasJet(new Temperature(700), 0, 100, 100),
-        new Vektor(0, 0)
+        new Vector(0, 0)
     );
     this.map = new Map(new Size(width, height));
     this.map.shuffleAirSpaces();
@@ -41,7 +41,7 @@ var Game = function(width, height) {
     }
 
     this.lifeCycleStep = function() {
-        var force = new Vektor(0, 0);
+        var force = new Vector(0, 0);
         var airSpace = this.map.findAirSpace(this.hotAirBalloon.position);
         // recalc balloon temperature
         // open air
@@ -55,7 +55,7 @@ var Game = function(width, height) {
             this.hotAirBalloon.balloon.temperature.addTemperature(this.hotAirBalloon.gasJet.temperature, TEMPERATURE_COEF_NEAR_FLAME);
         }
 
-        // recalc balloon moving vektor only if we're in air
+        // recalc balloon moving vector only if we're in air
         if (this.hotAirBalloon.position.y > 0) {
             force = this.hotAirBalloon.applyWind(force, airSpace.wind);
         }

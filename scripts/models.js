@@ -11,7 +11,7 @@ var Point = function(x, y) {
     }
 }
 
-var Vektor = function(x, y) {
+var Vector = function(x, y) {
     this.x = x;
     this.y = y;
 
@@ -29,21 +29,21 @@ var Vektor = function(x, y) {
     }
 }
 
-Vektor.sum = function(vektor1, vektor2) {
-    return new Vektor(vektor1.x + vektor2.x, vektor1.y + vektor2.y);
+Vector.sum = function(vector1, vector2) {
+    return new Vector(vector1.x + vector2.x, vector1.y + vector2.y);
 }
 
-Vektor.sub = function(vektor1, vektor2) {
-    return new Vektor(vektor1.x - vektor2.x, vektor1.y - vektor2.y);
+Vector.sub = function(vector1, vector2) {
+    return new Vector(vector1.x - vector2.x, vector1.y - vector2.y);
 }
 
-Vektor.aimTo = function(vektor, toVektor, koef) {
+Vector.aimTo = function(vector, toVector, koef) {
     if (typeof koef === 'undefined') {
         koef = 0.01;
     }
-    var sub = Vektor.sub(toVektor, vektor);
+    var sub = Vector.sub(toVector, vector);
     sub.mulScalar(koef);
-    return Vektor.sum(vektor, sub);
+    return Vector.sum(vector, sub);
 }
 
 var Space = function(point, size) {

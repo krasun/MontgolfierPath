@@ -144,7 +144,7 @@ var DebugView = function(game) {
         context.lineWidth = '1';
         context.strokeStyle = 'gray';
         var airSpace = game.map.findAirSpace(game.hotAirBalloon.position);
-        drawArrow(context, position, new Vektor(airSpace.wind.x, -airSpace.wind.y));
+        drawArrow(context, position, new Vector(airSpace.wind.x, -airSpace.wind.y));
         context.stroke();
 
         // temperature difference
@@ -161,10 +161,10 @@ var DebugView = function(game) {
         context.beginPath();
         context.lineWidth = '1';
         context.strokeStyle = 'black';
-        drawArrow(context, position, new Vektor(0, Gv * 20));
+        drawArrow(context, position, new Vector(0, Gv * 20));
         context.stroke();
 
-        var speed = new Vektor(game.hotAirBalloon.speed.x, game.hotAirBalloon.speed.y);
+        var speed = new Vector(game.hotAirBalloon.speed.x, game.hotAirBalloon.speed.y);
         if (speed.getLenght() > 0) {
             context.beginPath();
             context.lineWidth = '2';

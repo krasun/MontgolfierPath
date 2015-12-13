@@ -10,8 +10,8 @@ function getRandomInt(min, max) {
 }
 
 function isPointBellowLine(point, linePoint1, linePoint2) {
-    var v1 = new Vektor(linePoint2.x - linePoint1.x, linePoint2.y - linePoint1.y);   // Vector 1
-    var v2 = new Vektor(linePoint2.x - point.x, linePoint2.y - point.y);   // Vector 1
+    var v1 = new Vector(linePoint2.x - linePoint1.x, linePoint2.y - linePoint1.y);   // Vector 1
+    var v2 = new Vector(linePoint2.x - point.x, linePoint2.y - point.y);   // Vector 1
     var xp = v1.x * v2.y - v1.y * v2.x  // Cross product
     // console.log(xp);
     return xp > 0;
@@ -20,16 +20,16 @@ function isPointBellowLine(point, linePoint1, linePoint2) {
 /**
  * @param {Context2d} context
  * @param {Point} position
- * @param {Vektor} vektor
+ * @param {Vector} vector
  * @param {integer} headLength length of head in pixels
  *
  * @source http://stackoverflow.com/questions/808826/draw-arrow-on-canvas-tag
  */
-function drawArrow(context, position, vektor, headLength) {
+function drawArrow(context, position, vector, headLength) {
     if (typeof headLength === 'undefined') {
         headLength = 10;
     }
-    var to = Vektor.sum(new Vektor(position.x, position.y), vektor);
+    var to = Vector.sum(new Vector(position.x, position.y), vector);
     var angle = Math.atan2(to.y - position.y, to.x - position.x);
     context.moveTo(position.x, position.y);
     context.lineTo(to.x, to.y);

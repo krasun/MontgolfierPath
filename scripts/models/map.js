@@ -26,7 +26,7 @@ Map.prototype.shuffleAirSpaces = function(levelWidth, levelHeight) {
         for (var x = 0; x < this.size.width; x += levelWidth) {
             this.airSpaces.push(new AirSpace(
                 new Point(x, y),
-                new Vektor(
+                new Vector(
                     getRandomInt(30, 100) * direction,
                     getRandomInt(-levelHeight / 5, levelHeight / 5)
                 ),
@@ -38,7 +38,7 @@ Map.prototype.shuffleAirSpaces = function(levelWidth, levelHeight) {
     // FUCK OFF!
     // this.airSpaces = [new AirSpace(
     //     new Point(0, 0),
-    //     new Vektor(
+    //     new Vector(
     //         Math.random() * 100 * 2 - 100,
     //         0// Math.random() * this.size.height * 2 - this.size.height
     //     ),
