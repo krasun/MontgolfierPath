@@ -17,6 +17,7 @@
         <script src="./scripts/models/flying-object.js"></script>
         <script src="./scripts/models/hot-air-balloon.js"></script>
         <script src="./scripts/models/air-balloon.js"></script>
+        <script src="./scripts/models/cloud.js"></script>
         <script src="./scripts/models/map.js"></script>
         <script src="./scripts/views.js"></script>
         <script src="./scripts/events.js"></script>
@@ -34,6 +35,17 @@
                 game = new Game(50000, height),
                 paused = false
             ;
+
+            game.fillWithClouds(getRandomInt(10, 20));
+            // clouds under all
+            for (var i in game.objects) {
+                var object = game.objects[i];
+                if (! (object instanceof Cloud)) {
+                    continue;
+                }
+
+                ViewRegistry.registerView(new CloudView(object));
+            }
 
             canvas.width = width;
             canvas.height = height;

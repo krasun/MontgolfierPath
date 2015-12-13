@@ -108,6 +108,61 @@ var BalloonHoleView = function(montgolfiera) {
     }
 };
 
+var CloudView = function(cloud) {
+    this.render = function(context) {
+        var point = preparePoint(cloud.position, context),
+            smallRadiusX = cloud.size.width / 6,
+            smallRadiusY = cloud.size.height * 0.3,
+            bigRadiusX = cloud.size.width / 4,
+            bigRadiusY = cloud.size.height * 0.5;
+
+        context.beginPath();
+        context.fillStyle = 'white';
+        context.lineWidth = 1;
+        context.strokeStyle = 'blue';
+        context.moveTo(point.x - cloud.size.width / 3, point.y + cloud.size.height / 2);
+        context.lineTo(point.x + cloud.size.width / 3, point.y + cloud.size.height / 2);
+        context.stroke();
+        context.beginPath();
+        context.ellipse(
+            point.x - cloud.size.width / 3,
+            point.y - cloud.size.height / 2 + cloud.size.height * 0.7, // weird
+            smallRadiusX,
+            smallRadiusY,
+            0,
+            Math.PI / 18, // 10
+            Math.PI / 2, // 90
+            true
+        );
+        context.stroke();
+        context.beginPath();
+        context.ellipse(
+            point.x + cloud.size.width / 3,
+            point.y - cloud.size.height / 2 + cloud.size.height * 0.7, // weird
+            smallRadiusX,
+            smallRadiusY,
+            0,
+            17 * Math.PI / 18, // 170
+            Math.PI / 2, // 90
+            false
+        );
+        context.stroke();
+        context.beginPath();
+        context.ellipse(
+            point.x,
+            point.y, // weird
+            bigRadiusX,
+            bigRadiusY,
+            0,
+            2 * Math.PI / 18, // 340
+            8 * Math.PI / 9, // 160
+            true
+        );
+        context.stroke();
+
+    }
+}
+
 var MontgolfieraView = function(montgolfiera) {
     var balloonView = new BalloonView(montgolfiera),
         balloonHoleView = new BalloonHoleView(montgolfiera),

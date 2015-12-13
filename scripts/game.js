@@ -13,9 +13,19 @@ var Game = function(width, height) {
     this.map.shuffleAirSpaces();
     this.map.shuffleRelief();
     this.map.putLandingPlace(this.hotAirBalloon.position, 1000);
+
     var step = 0;
 
     this.objects = [this.hotAirBalloon];
+
+    this.fillWithClouds = function(count) {
+        for (var i = 0; i < count; i++) {
+            this.objects.push(new Cloud(
+                new Point(getRandomInt(0, width), getRandomInt(400, height)),
+                new Size(getRandomInt(50, 100), getRandomInt(25, 50))
+            ));
+        }
+    }
 
     this.getStep = function() {
         return step;
