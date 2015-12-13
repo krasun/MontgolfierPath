@@ -136,10 +136,23 @@ var DebugView = function(game) {
         context.lineWidth = '1';
         context.strokeStyle = 'gray';
         var airSpace = game.map.findAirSpace(game.hotAirBalloon.position);
-        position.y -= 20;
         drawArrow(context, position, airSpace.wind);
         context.stroke();
-        position.y += 20;
+        var temperatureForce = game.hotAirBalloon.getPullingForce(airSpace.temperature);
+        if (temperatureForce.getLenght() > 0) {
+            context.beginPath();
+            context.lineWidth = '1';
+            context.strokeStyle = temperatureForce.y < 0 ? 'blue' : 'red';
+            temperatureForce.y *= -1;
+            drawArrow(context, position, temperatureForce);
+            context.stroke();
+        }
+
+        context.beginPath();
+        context.lineWidth = '1';
+        context.strokeStyle = 'black';
+        drawArrow(context, position, new Vektor(0, Gv * 20));
+        context.stroke();
 
         var speed = new Vektor(game.hotAirBalloon.speed.x, game.hotAirBalloon.speed.y);
         if (speed.getLenght() > 0) {

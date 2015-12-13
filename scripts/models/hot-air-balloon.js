@@ -9,10 +9,11 @@ HotAirBalloon.prototype.applyWind = function(speed, wind) {
     return Vektor.aimTo(speed, wind);
 }
 HotAirBalloon.prototype.applyTemperature = function(speed, temperature) {
-    var resultSpeed = new Vektor(speed.x, speed.y);
-    var temperatureDelta = this.balloon.temperature.value - temperature.value;
-    resultSpeed.y += temperatureDelta * TEMPERATURE_TO_SPEED_COEF;
-    return resultSpeed;
+    return Vektor.aimTo(speed, this.getPullingForce(temperature), TEMPERATURE_TO_SPEED_COEF);
+}
+HotAirBalloon.prototype.getPullingForce = function(airTemperature) {
+    var temperatureDelta = this.balloon.temperature.value - airTemperature.value;
+    return new Vektor(0, temperatureDelta);
 }
 HotAirBalloon.prototype.applyGroundForce = function(speed) {
     var resultSpeed = new Vektor(speed.x, speed.y);
