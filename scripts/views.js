@@ -72,8 +72,8 @@ var GasJetView = function (montgolfiera) {
             gondolaPositionY = balloonDistance + balloon.radius + point.y
         ;
 
-        var gasJetWidth = 0.25 * gondolaWidth,
-            gasJetHeight = 0.5 * gondolaHeight,
+        var gasJetWidth = 0.5 * gondolaWidth,
+            gasJetHeight = 0.75 * gondolaHeight,
             gasJetPositionX = gondolaPositionX + gondolaWidth / 2 - gasJetWidth / 2,
             gasJetPositionY = gondolaPositionY - balloonDistance * 0.75
         ;
