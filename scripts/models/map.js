@@ -36,7 +36,7 @@ Map.prototype.shuffleAirSpaces = function(levelWidth, levelHeight) {
 Map.prototype.shuffleRelief = function() {
     this.relief = [];
     for (var x = 0; x < this.size.width; x += getRandomInt(10, 100)) {
-        this.relief.push(new Point(x, getRandomInt(0, 50)));
+        this.relief.push(new Point(x, getRandomInt(0, 100)));
     }
 }
 

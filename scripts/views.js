@@ -101,8 +101,8 @@ var MontgolfieraView = function(montgolfiera) {
 var MapView = function(map) {
     this.render = function(context) {
         context.beginPath(); 
-        context.lineWidth="2";
-        context.strokeStyle="brown"; // Green path
+        context.lineWidth = "2";
+        context.strokeStyle = "brown"; // Green path
         var point = preparePoint(new Point(0, 0), context);
         context.moveTo(point.x, point.y);
         for (var i in map.relief) {
@@ -112,6 +112,45 @@ var MapView = function(map) {
         point = preparePoint(new Point(map.width, 0), context);
         context.lineTo(point.x, point.y);
         context.stroke(); // Draw it
+    }
+}
+
+var StatsView = function(game) {
+    this.render = function(context) {
+        context.font = "12px Consolas";
+        // context.fillText("Balloon temperature: " + roundFloat(game.hotAirBalloon.balloon.temperature.value), 10, 10);
+        var logs = game.getLog();
+        for (var i in logs) {
+            context.fillText(logs[i], 10, 20 + 12 * i);
+        }
+        // context.fillText("Position: " + game.hotAirBalloon.position.toString(), 10, 10);
+    }
+}
+
+var DebugView = function(game) {
+    this.render = function(context) {
+        var position = preparePoint(game.hotAirBalloon.position, context);
+
+        // wind
+        context.beginPath();
+        context.lineWidth = '1';
+        context.strokeStyle = 'gray';
+        var airSpace = game.map.findAirSpace(game.hotAirBalloon.position);
+        position.y -= 20;
+        drawArrow(context, position, airSpace.wind);
+        context.stroke();
+        position.y += 20;
+
+        var speed = new Vektor(game.hotAirBalloon.speed.x, game.hotAirBalloon.speed.y);
+        if (speed.getLenght() > 0) {
+            context.beginPath();
+            context.lineWidth = '2';
+            context.strokeStyle = 'green';
+            speed.mulScalar(100);
+            speed.y *= -1;
+            drawArrow(context, position, speed);
+            context.stroke();
+        }
     }
 }
 
