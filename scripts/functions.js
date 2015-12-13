@@ -11,10 +11,10 @@ function getRandomInt(min, max) {
 
 function isPointBellowLine(point, linePoint1, linePoint2) {
     var v1 = new Vektor(linePoint2.x - linePoint1.x, linePoint2.y - linePoint1.y);   // Vector 1
-    var v1 = new Vektor(linePoint2.x - point.x, linePoint2.y - point.y);   // Vector 1
+    var v2 = new Vektor(linePoint2.x - point.x, linePoint2.y - point.y);   // Vector 1
     var xp = v1.x * v2.y - v1.y * v2.x  // Cross product
-    console.log(xp);
-    return xp >= 0;
+    // console.log(xp);
+    return xp > 0;
 }
 
 /**

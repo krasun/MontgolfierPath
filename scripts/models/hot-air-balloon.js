@@ -31,8 +31,9 @@ HotAirBalloon.prototype.move = function(vektor) {
 }
 
 HotAirBalloon.prototype.checkColisions = function(map) {
-    var bounds = map.size;
-    if (this.position.y <= this.getSize().height && this.speed.y < 0) {
+    var bounds = map.size,
+        lowerPoint = new Point(this.position.x, this.position.y - this.getSize().height);
+    if (lowerPoint.y <= 0 && this.speed.y < 0) {
         this.position.y = this.getSize().height;
         this.speed = new Vektor(0, 0); // stop
     }
@@ -53,8 +54,10 @@ HotAirBalloon.prototype.checkColisions = function(map) {
     for (var i = 0; i < map.relief.length - 1; i++) {
         var left = map.relief[i],
             right = map.relief[i + 1];
-        if (left.x >= this.position.x && right.x <= this.position.x) {
-            if (isPointBellowLine(this.position, left, right)) {
+        if (left.x <= this.position.x && this.position.x <= right.x) {
+            lowerPoint.x += this.speed.x;
+            lowerPoint.y += this.speed.y;
+            if (isPointBellowLine(lowerPoint, left, right)) {
                 this.speed.x = 0;
                 this.speed.y = 0;
             }
@@ -63,6 +66,7 @@ HotAirBalloon.prototype.checkColisions = function(map) {
     }
 }
 
+// @todo: coords aren't center!
 HotAirBalloon.prototype.getSize = function() {
     if (this.size) {
         return this.size;
