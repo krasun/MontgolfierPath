@@ -19,7 +19,7 @@ var Vector = function(x, y) {
         return "-> [" + roundFloat(this.x, 2) + ", " + roundFloat(this.y, 2) + "]";
     }
 
-    this.getLenght = function() {
+    this.getLength = function() {
         return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
     }
 

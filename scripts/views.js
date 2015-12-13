@@ -149,7 +149,7 @@ var DebugView = function(game) {
 
         // temperature difference
         var temperatureForce = game.hotAirBalloon.getPullingForce(airSpace.temperature);
-        if (temperatureForce.getLenght() > 0) {
+        if (temperatureForce.getLength() > 0) {
             context.beginPath();
             context.lineWidth = '1';
             context.strokeStyle = temperatureForce.y < 0 ? 'blue' : 'red';
@@ -165,7 +165,7 @@ var DebugView = function(game) {
         context.stroke();
 
         var speed = new Vector(game.hotAirBalloon.speed.x, game.hotAirBalloon.speed.y);
-        if (speed.getLenght() > 0) {
+        if (speed.getLength() > 0) {
             context.beginPath();
             context.lineWidth = '2';
             context.strokeStyle = 'green';
