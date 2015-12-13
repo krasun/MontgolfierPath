@@ -146,6 +146,14 @@ var StatsView = function(game) {
         context.fillText("Balloon temperature: " + roundFloat(game.hotAirBalloon.balloon.temperature.value), 10, 20);
         context.fillText("Air temperature: " + airSpace.temperature.toString(), 10, 40);
         context.fillText("Wind: " + airSpace.wind.toString(), 10, 60);
+        context.fillStyle = "#B359A8";
+        context.fillText("Usage:", 10, 90);
+        context.fillText("Hold up arrow to turn gas jet on", 20, 110);
+        context.fillText("Release arrow to turn gas jet off", 20, 130);
+        context.fillText("Hold down arrow to open balloon hole", 20, 150);
+        context.fillText("Release down to close balloon hole", 20, 170);
+        context.fillText("Press 'B' to launch test air balloon", 20, 190);
+        context.fillText("Press 'D' to toggle debug information", 20, 210);
     }
 }
 
@@ -157,7 +165,7 @@ var DebugView = function(game) {
         context.font = "12px Consolas";
         var logs = game.getLog();
         for (var i in logs) {
-            context.fillText(logs[i], context.canvas.width - 200, 20 + 12 * i);
+            context.fillText(logs[i], context.canvas.width - 250, 20 + 12 * i);
         }
 
         for (var i in game.objects) {
