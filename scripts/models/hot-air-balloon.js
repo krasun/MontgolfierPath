@@ -22,7 +22,7 @@ HotAirBalloon.prototype.applyGroundForce = function(speed) {
 }
 
 HotAirBalloon.prototype.applyForce = function(force) {
-    this.speed = Vektor.aimTo(this.speed, force, 0.1);
+    this.speed = Vektor.aimTo(this.speed, force, 1 / INERTIA_COEF);
 }
 HotAirBalloon.prototype.move = function(vektor) {
     // apply speed
@@ -48,6 +48,18 @@ HotAirBalloon.prototype.checkColisions = function(map) {
     if (this.position.x >= bounds.width - this.getSize().width && this.speed.x > 0) {
         this.position.x = bounds.width - this.getSize().width;
         this.speed.x = 0;
+    }
+
+    for (var i = 0; i < map.relief.length - 1; i++) {
+        var left = map.relief[i],
+            right = map.relief[i + 1];
+        if (left.x >= this.position.x && right.x <= this.position.x) {
+            if (isPointBellowLine(this.position, left, right)) {
+                this.speed.x = 0;
+                this.speed.y = 0;
+            }
+            break;
+        }
     }
 }
 
