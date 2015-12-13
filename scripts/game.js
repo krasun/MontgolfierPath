@@ -23,6 +23,7 @@ var Game = function(width, height) {
 
     this.getLog = function() {
         var str = ['Frame: ' + step];
+        str.push('Objects: ' + this.objects.length);
         str.push('Temperature: ' + this.hotAirBalloon.balloon.temperature.toString());
         str.push('Balloon position: ' + this.hotAirBalloon.position.toString());
         str.push('Balloon speed: ' + this.hotAirBalloon.speed.toString());
@@ -46,6 +47,9 @@ var Game = function(width, height) {
     this.lifeCycleStep = function() {
         for (var i in this.objects) {
             var object = this.objects[i];
+            if (! (object instanceof FlyingObject)) {
+                continue;
+            }
 
             var force = new Vector(0, 0);
             var airSpace = this.map.findAirSpace(object.position);
