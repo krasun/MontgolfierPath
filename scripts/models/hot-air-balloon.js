@@ -55,10 +55,15 @@ HotAirBalloon.prototype.checkColisions = function(map) {
         var left = map.relief[i],
             right = map.relief[i + 1];
         if (left.x <= this.position.x && this.position.x <= right.x) {
+
             lowerPoint.x += this.speed.x;
-            lowerPoint.y += this.speed.y;
             if (isPointBellowLine(lowerPoint, left, right)) {
                 this.speed.x = 0;
+            }
+
+            lowerPoint.x = this.position.x;
+            lowerPoint.y += this.speed.y;
+            if (isPointBellowLine(lowerPoint, left, right)) {
                 this.speed.y = 0;
             }
             break;
